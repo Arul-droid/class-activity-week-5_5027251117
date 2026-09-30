@@ -1,0 +1,21 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    color: black;
+    background-color: antiquewhite;
+    font-family: Arial, sans-serif;
+}
+
+li {
+  margin: 8px 0;
+}
+.done {
+  text-decoration: line-through;
+  color: gray;
+}
+button {
+  margin-left: 5px;
+}
+
