@@ -5,3 +5,4 @@ challenge 2 praktikum
 https://github.com/aadyfan/challange2_pweb_B-16
 
 copilot vscode
+[ChatLog](CHAT-LOG.md)
