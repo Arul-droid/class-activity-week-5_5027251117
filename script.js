@@ -71,3 +71,44 @@ document.getElementById("taskInput").addEventListener("keypress", (e) => {
         addTask();
     }
 });
+
+// menghapus task berdasarkan index
+function deleteTask(index) {
+    const taskIndex = Number(index);
+
+    if (Number.isNaN(taskIndex) || taskIndex < 0 || taskIndex >= tasks.length) {
+        return;
+    }
+
+    tasks.splice(taskIndex, 1);
+    renderTasks();
+}
+
+function toggleTaskComplete(index) {
+    const taskIndex = Number(index);
+
+    if (Number.isNaN(taskIndex) || taskIndex < 0 || taskIndex >= tasks.length) {
+        return;
+    }
+
+    tasks[taskIndex].completed = !tasks[taskIndex].completed;
+    renderTasks();
+}
+
+// event delegation buat tombol delete
+document.getElementById("task").addEventListener("click", (e) => {
+    const deleteButton = e.target.closest(".deleteButton");
+
+    if (deleteButton) {
+        const index = deleteButton.getAttribute("data-index");
+        deleteTask(index);
+    }
+});
+
+// event delegation buat checkbox complete
+document.getElementById("task").addEventListener("change", (e) => {
+    if (e.target.classList.contains("completeCheckbox")) {
+        const index = e.target.getAttribute("data-index");
+        toggleTaskComplete(index);
+    }
+});
