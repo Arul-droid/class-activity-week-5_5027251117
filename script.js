@@ -112,3 +112,29 @@ document.getElementById("task").addEventListener("change", (e) => {
         toggleTaskComplete(index);
     }
 });
+
+let currentFilter = "all";
+
+// mengembalikan task yang sudah difilter sesuai currentFilter
+function getFilteredTasks() {
+    if (currentFilter === "active") {
+        return tasks.filter((task) => !task.completed);
+    }
+
+    if (currentFilter === "completed") {
+        return tasks.filter((task) => task.completed);
+    }
+
+    return tasks;
+}
+
+// mengganti filter aktif
+function setFilter(filter) {
+    currentFilter = filter;
+    renderTasks();
+}
+
+// tombol filter
+document.getElementById("all").addEventListener("click", () => setFilter("all"));
+document.getElementById("active").addEventListener("click", () => setFilter("active"));
+document.getElementById("done").addEventListener("click", () => setFilter("completed"));
