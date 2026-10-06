@@ -12,7 +12,7 @@
 
         <section class="input">
             <input type="text" id="taskInput" placeholder="Judul kegiatan">
-            <select name="mata kuliah" id="mata kuliah">
+            <select name="mata kuliah" id="courseInput">
                 <option value="">pilih mata kuliah</option>
                 <option value="kjk">keamanan jaringan komputer</option>
                 <option value="pemweb">Pemrograman Web</option>
@@ -21,18 +21,16 @@
                 <option value="kompro">Komunikasi profesional</option>
                 <option value="iot">Internet of Things</option>
             </select>
-            <input type="date">
+            <input type="date" id="dueDateInput">
             <button id="addButton">create</button>
         </section>
 
         <section class="list">
-            <button class="filter" value="all">all</button>
-            <button class="filter" value="done">done</button>
-            <button class="filter" value="active">active</button>
+            <button class="filter" id="all" value="all">all</button>
+            <button class="filter" id="done" value="done">done</button>
+            <button class="filter" id="active" value="active">active</button>
 
-            <ul id="task">
-                <li></li>
-            </ul>
+            <ul id="task"></ul>
         </section>
     </div>
     <script src="script.js"></script>

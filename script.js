@@ -1,17 +1,25 @@
 let tasks = [
     {
         text: "Membuat Website to-do list",
+        course: "",
+        dueDate: "",
         completed: false
     },
     {
         text: "Kerjain Jarkom Modul 2",
+        course: "",
+        dueDate: "",
         completed: false
     },
     {
         text: "buat aplikasi pemmob",
+        course: "",
+        dueDate: "",
         completed: false
     }
 ];
+
+let currentFilter = "all";
 
 // menampilkan task
 function renderTasks() {
@@ -28,26 +36,48 @@ function renderTasks() {
     filteredTasks.forEach((task) => {
         const originalIndex = tasks.indexOf(task);
         const li = document.createElement("li");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "completeCheckbox";
+        checkbox.dataset.index = originalIndex;
+        checkbox.checked = task.completed;
 
-        li.innerHTML = `
-            <span style="display:flex; align-items:center; gap:10px;">
-                <input type="checkbox" class="completeCheckbox" data-index="${originalIndex}" ${task.completed ? "checked" : ""}>
-                <span style="${task.completed ? "text-decoration: line-through; color: #999;" : ""}">${task.text}</span>
-            </span>
-            <button class="deleteButton" data-index="${originalIndex}">
-                Delete
-            </button>
-        `;
+        const text = document.createElement("span");
+        text.textContent = task.text;
+        if (task.completed) {
+            text.classList.add("done");
+        }
+
+        const details = [task.course, task.dueDate].filter(Boolean).join(" | ");
+        const taskContent = document.createElement("span");
+        taskContent.append(checkbox, text);
+        taskContent.style.display = "flex";
+        taskContent.style.alignItems = "center";
+        taskContent.style.gap = "10px";
+        li.appendChild(taskContent);
+
+        if (details) {
+            const detailText = document.createElement("small");
+            detailText.textContent = details;
+            li.appendChild(detailText);
+        }
+
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "deleteButton";
+        deleteButton.dataset.index = originalIndex;
+        deleteButton.textContent = "Delete";
+        li.appendChild(deleteButton);
 
         taskList.appendChild(li);
     });
 }
 
-renderTasks();
-
 // menambah task baru
 function addTask() {
     const input = document.getElementById("taskInput");
+    const courseInput = document.getElementById("courseInput");
+    const dueDateInput = document.getElementById("dueDateInput");
     const text = input.value.trim();
 
     if (text === "") {
@@ -56,12 +86,17 @@ function addTask() {
 
     tasks.push({
         text: text,
+        course: courseInput.value ? courseInput.selectedOptions[0].textContent.trim() : "",
+        dueDate: dueDateInput.value,
         completed: false
     });
 
+    saveTasks();
     renderTasks();
 
     input.value = "";
+    courseInput.value = "";
+    dueDateInput.value = "";
     input.focus();
 }
 
@@ -69,7 +104,7 @@ function addTask() {
 document.getElementById("addButton").addEventListener("click", addTask);
 
 // bisa tambah task pakai Enter di input
-document.getElementById("taskInput").addEventListener("keypress", (e) => {
+document.getElementById("taskInput").addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
         addTask();
     }
@@ -84,6 +119,7 @@ function deleteTask(index) {
     }
 
     tasks.splice(taskIndex, 1);
+    saveTasks();
     renderTasks();
 }
 
@@ -95,6 +131,7 @@ function toggleTaskComplete(index) {
     }
 
     tasks[taskIndex].completed = !tasks[taskIndex].completed;
+    saveTasks();
     renderTasks();
 }
 
@@ -115,8 +152,6 @@ document.getElementById("task").addEventListener("change", (e) => {
         toggleTaskComplete(index);
     }
 });
-
-let currentFilter = "all";
 
 // mengembalikan task yang sudah difilter sesuai currentFilter
 function getFilteredTasks() {
@@ -144,12 +179,22 @@ document.getElementById("done").addEventListener("click", () => setFilter("compl
 
 // menyimpan data
 function saveTasks() {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    try {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+    } catch (error) {
+        console.error("Gagal menyimpan data task:", error);
+    }
 }
 
 // mengambil data
 function loadTasks() {
-    const savedTasks = localStorage.getItem("tasks");
+    let savedTasks;
+    try {
+        savedTasks = localStorage.getItem("tasks");
+    } catch (error) {
+        console.error("Gagal mengambil data task:", error);
+        return;
+    }
 
     if (!savedTasks) {
         return;
@@ -159,7 +204,14 @@ function loadTasks() {
         const parsedTasks = JSON.parse(savedTasks);
 
         if (Array.isArray(parsedTasks)) {
-            tasks = parsedTasks;
+            tasks = parsedTasks
+                .filter((task) => task && typeof task.text === "string")
+                .map((task) => ({
+                    text: task.text,
+                    course: typeof task.course === "string" ? task.course : "",
+                    dueDate: typeof task.dueDate === "string" ? task.dueDate : "",
+                    completed: task.completed === true
+                }));
         }
     } catch (error) {
         console.error("Gagal membaca data task:", error);
