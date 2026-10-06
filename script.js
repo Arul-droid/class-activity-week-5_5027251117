@@ -138,3 +138,30 @@ function setFilter(filter) {
 document.getElementById("all").addEventListener("click", () => setFilter("all"));
 document.getElementById("active").addEventListener("click", () => setFilter("active"));
 document.getElementById("done").addEventListener("click", () => setFilter("completed"));
+
+// menyimpan data
+function saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+// mengambil data
+function loadTasks() {
+    const savedTasks = localStorage.getItem("tasks");
+
+    if (!savedTasks) {
+        return;
+    }
+
+    try {
+        const parsedTasks = JSON.parse(savedTasks);
+
+        if (Array.isArray(parsedTasks)) {
+            tasks = parsedTasks;
+        }
+    } catch (error) {
+        console.error("Gagal membaca data task:", error);
+    }
+}
+
+loadTasks();
+renderTasks();
