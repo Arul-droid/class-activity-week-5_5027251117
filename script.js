@@ -1,4 +1,4 @@
-let task = [
+let tasks = [
     {
         text: "Membuat Website to-do list",
         completed: false
