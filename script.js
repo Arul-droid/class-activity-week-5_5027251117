@@ -41,3 +41,33 @@ function renderTasks() {
 }
 
 renderTasks();
+
+// menambah task baru
+function addTask() {
+    const input = document.getElementById("taskInput");
+    const text = input.value.trim();
+
+    if (text === "") {
+        return;
+    }
+
+    tasks.push({
+        text: text,
+        completed: false
+    });
+
+    renderTasks();
+
+    input.value = "";
+    input.focus();
+}
+
+// tombol Add
+document.getElementById("addButton").addEventListener("click", addTask);
+
+// bisa tambah task pakai Enter di input
+document.getElementById("taskInput").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+        addTask();
+    }
+});
