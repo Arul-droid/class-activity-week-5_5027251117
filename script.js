@@ -23,15 +23,18 @@ function renderTasks() {
 
     taskList.innerHTML = "";
 
-    tasks.forEach((task, index) => {   // DIUBAH: belum ada filter, jadi index langsung dari forEach
+    const filteredTasks = getFilteredTasks();
+
+    filteredTasks.forEach((task) => {
+        const originalIndex = tasks.indexOf(task);
         const li = document.createElement("li");
 
         li.innerHTML = `
             <span style="display:flex; align-items:center; gap:10px;">
-                <input type="checkbox" class="completeCheckbox" data-index="${index}" ${task.completed ? "checked" : ""}>
+                <input type="checkbox" class="completeCheckbox" data-index="${originalIndex}" ${task.completed ? "checked" : ""}>
                 <span style="${task.completed ? "text-decoration: line-through; color: #999;" : ""}">${task.text}</span>
             </span>
-            <button class="deleteButton" data-index="${index}">
+            <button class="deleteButton" data-index="${originalIndex}">
                 Delete
             </button>
         `;
